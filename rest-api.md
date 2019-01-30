@@ -244,11 +244,11 @@ m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
 * 1M
 
 **Rate limiters (rateLimitType)**
-* REQUESTS_WEIGHT
+* REQUEST_WEIGHT
 
     ```json
     {
-      "rateLimitType": "REQUESTS_WEIGHT",
+      "rateLimitType": "REQUEST_WEIGHT",
       "interval": "MINUTE",
       "intervalNum": 1,
       "limit": 1200
@@ -581,7 +581,7 @@ symbol | STRING | YES |
 ```
 GET /api/v1/ticker/24hr
 ```
-24 hour price change statistics. **Careful** when accessing this with no symbol.
+24 hour rolling window price change statistics. **Careful** when accessing this with no symbol.
 
 **Weight:**
 1 for a single symbol; **40** when the symbol parameter is omitted
@@ -1348,7 +1348,7 @@ The `MAX_NUM_ALGO_ORDERS` filter defines the maximum number of "algo" orders an 
 **/exchangeInfo format:**
 ```javascript
   {
-    "filterType": "MAX_ALGO_ORDERS",
+    "filterType": "MAX_NUM_ALGO_ORDERS",
     "maxNumAlgoOrders": 5
   }
 ```

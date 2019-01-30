@@ -336,6 +336,85 @@ Fetch system status.
 }
 ```
 
+### Account API Trading Status (USER_DATA)
+```
+GET /wapi/v3/apiTradingStatus.html
+```
+Fetch account api trading status detail.
+
+For more details about our api trading rules, please refer to the link:https://support.binance.com/hc/en-us/articles/115003235691
+
+
+**Weight:**
+1
+
+
+**Parameters:**
+
+Name | Type | Mandatory | Description
+------------ | ------------ | ------------ | ------------
+recvWindow | LONG | NO  
+timestamp | LONG | YES  
+
+**Response:**
+```javascript
+{
+    "success": true,     // Query result
+    "status": {          // API trading status detail
+        "isLocked": false,   // API trading function is locked or not
+        "plannedRecoverTime": 0,  // If API trading function is locked, this is the planned recover time
+        "triggerCondition": { 
+            "GCR": 150,  // Number of GTC orders
+            "IFER": 150, // Number of FOK/IOC orders
+            "UFR": 300   // Number of orders
+        },
+        "indicators": {  // The indicators updated every 30 seconds
+           "BTCUSDT": [  // The symbol
+            {
+            "i": "UFR",  // Unfilled Ratio (UFR)
+            "c": 20,     // Count of all orders
+            "v": 0.05,   // Current UFR value
+            "t": 0.995   // Trigger UFR value
+            },
+            {
+            "i": "IFER", // IOC/FOK Expiration Ratio (IFER)
+            "c": 20,     // Count of FOK/IOC orders
+            "v": 0.99,   // Current IFER value
+            "t": 0.99    // Trigger IFER value
+            },
+            {
+            "i": "GCR",  // GTC Cancellation Ratio (GCR)
+            "c": 20,     // Count of GTC orders
+            "v": 0.99,   // Current GCR value
+            "t": 0.99    // Trigger GCR value
+            }
+            ],
+            "ETHUSDT": [ 
+            {
+            "i": "UFR",
+            "c": 20,
+            "v": 0.05,
+            "t": 0.995
+            },
+            {
+            "i": "IFER",
+            "c": 20,
+            "v": 0.99,
+            "t": 0.99
+            },
+            {
+            "i": "GCR",
+            "c": 20,
+            "v": 0.99,
+            "t": 0.99
+            }
+            ]
+        },
+        "updateTime": 1547630471725   // The query result return time
+    }
+}
+```
+
 ### DustLog (USER_DATA)
 ```
 GET /wapi/v3/userAssetDribbletLog.html   (HMAC SHA256)
@@ -493,3 +572,132 @@ timestamp | LONG | YES
     }
 }
 ```
+
+
+### Query Sub-account List(For Master Account)
+```
+GET   /wapi/v3/sub-account/list.html (HMAC SHA256)
+```
+Fetch sub account list.
+
+
+**Weight:**
+1
+
+
+**Parameters:**
+
+Name | Type | Mandatory | Description
+------------ | ------------ | ------------ | ------------
+email | STRING | NO | Sub-account email
+status | STRING | NO | Sub-account status: enabled or disabled
+page | INT | NO | Default value: 1
+limit | INT | NO | Default value: 500
+recvWindow | LONG | NO  
+timestamp | LONG | YES  
+
+**Response:**
+```javascript
+{
+    "success":true,
+    "subAccounts":[
+        {
+            "email":"123@test.com",
+            "status":"enabled",
+            "activated":true,
+            "mobile":"91605290",
+            "gAuth":true,
+            "createTime":1544433328000
+        },
+        {
+            "email":"321@test.com",
+            "status":"disabled",
+            "activated":true,
+            "mobile":"22501238",
+            "gAuth":true,
+            "createTime":1544433328000
+        }
+    ]
+}
+```
+
+### Query Sub-account Transfer History(For Master Account)
+```
+GET   /wapi/v3/sub-account/transfer/history.html (HMAC SHA256)
+```
+Fetch transfer history list
+
+
+**Weight:**
+1
+
+
+**Parameters:**
+
+Name | Type | Mandatory | Description
+------------ | ------------ | ------------ | ------------
+email | STRING | NO | Sub-account email
+startTime | LONG | NO | Default return the history with in 100 days
+endTime | LONG | NO | Default return the history with in 100 days
+page | INT | NO | Default value: 1
+limit | INT | NO | Default value: 500
+recvWindow | LONG | NO  
+timestamp | LONG | YES  
+
+**Response:**
+```javascript
+{
+    "success":true,
+    "transfers":[
+        {
+            "from":"aaa@test.com",
+            "to":"bbb@test.com",
+            "asset":"BTC",
+            "qty":"1",
+            "time":1544433328000
+        },
+        {
+            "from":"bbb@test.com",
+            "to":"ccc@test.com",
+            "asset":"ETH",
+            "qty":"2",
+            "time":1544433328000
+        }
+    ]
+}
+```
+
+### Sub-account Transfer(For Master Account)
+```
+POST   /wapi/v3/sub-account/transfer.html (HMAC SHA256)
+```
+Execute sub-account transfer
+
+
+**Weight:**
+1
+
+
+**Parameters:**
+
+Name | Type | Mandatory | Description
+------------ | ------------ | ------------ | ------------
+fromEmail | STRING | YES | Sender email
+toEmail | STRING | YES | Recipient email
+asset | STRING | YES
+amount | DECIMAL | YES
+recvWindow | LONG | NO  
+timestamp | LONG | YES  
+
+**Response:**
+```javascript
+{
+    "success":true,
+    "txnId":"2966662589"
+}
+
+```
+
+
+
+
